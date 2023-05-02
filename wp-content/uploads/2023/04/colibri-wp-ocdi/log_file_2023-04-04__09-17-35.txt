@@ -1,0 +1,46 @@
+
+---Downloaded files---
+The import files for: Designer Portfolio I were successfully downloaded!
+Initial max execution time = 120
+Files info:
+Site URL = http://localhost/quiz
+Data file = C:/Xampp/htdocs/quiz/wp-content/uploads/2023/04/colibri-wp-ocdi/demo-content-import-file_2023-04-04__09-17-35.xml
+Widget file = C:/Xampp/htdocs/quiz/wp-content/uploads/2023/04/colibri-wp-ocdi/demo-widgets-import-file_2023-04-04__09-17-35.json
+Customizer file = C:/Xampp/htdocs/quiz/wp-content/uploads/2023/04/colibri-wp-ocdi/demo-customizer-import-file_2023-04-04__09-17-35.dat
+Redux files:
+not defined!
+
+---extendthemes-ocdi/before_content_import---
+
+
+--- Colibri Importer ---
+[INFO] - Installed Plugin: contact-form-7/wp-contact-form-7.php
+
+--- Colibri Importer ---
+[INFO] - Plugins instalantion requests new ajax call
+
+------
+New AJAX call!
+
+
+------
+New AJAX call!
+
+
+---Importing widgets---
+Zone de widgets de colonne latérale de blog : 
+
+Rechercher - No Title - Imported
+Articles récents - No Title - Imported
+Commentaires récents - No Title - Imported
+Archives - No Title - Imported
+Catégories - No Title - Imported
+Méta - No Title - Imported
+
+
+
+---Importing customizer settings---
+Customizer settings import finished!
+
+---extendthemes-ocdi/after_import---
+
