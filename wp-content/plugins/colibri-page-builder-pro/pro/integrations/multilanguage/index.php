@@ -4,13 +4,22 @@ namespace ExtendBuilder;
 
 function colibri_get_default_language()
 {
-     $lang = apply_filters("colibri_get_default_language", "");
+    $lang = apply_filters("colibri_get_default_language", "default");
     return $lang;
+}
+
+function colibri_is_default_language($lang)
+{
+    if ($lang === 'default') {
+        return true;
+    }
+
+    return ($lang === colibri_get_default_language());
 }
 
 function colibri_get_post_language($post_id)
 {
-   $lang = apply_filters("colibri_get_post_language", "", $post_id);
+    $lang = apply_filters("colibri_get_post_language", "", $post_id);
     return $lang;
 }
 
@@ -35,13 +44,13 @@ add_filter('extendbuilder_wp_data', function ($value) {
     return $value;
 });
 
-add_action( 'plugins_loaded', function () {
-  // load support for polylang
+add_action('plugins_loaded', function () {
+    // load support for polylang
     if (colibri_polylang_is_active()) {
         require_once __DIR__ . "/polylang-options.php";
     }
 
-  // load support for WPML
+    // load support for WPML
     if (colibri_wpml_is_active()) {
         require_once __DIR__ . "/wpml-options.php";
     }
@@ -52,7 +61,6 @@ add_action('icl_make_duplicate', function ($master_post_id, $lang, $post_array, 
     if ($iclTranslationManagement) {
         $iclTranslationManagement->reset_duplicate_flag($id);
     }
-
 }, 10, 4);
 
 
@@ -66,7 +74,7 @@ function link_post_translations($source, $dest)
             array_merge(
                 $translations ? $translations : array(),
                 array(
-            $dest['lang'] => $dest['id']
+                    $dest['lang'] => $dest['id']
                 )
             )
         );
@@ -79,7 +87,7 @@ function link_post_translations($source, $dest)
 
         $set_language_args = array(
             'element_id' => $dest['id'],
-            'element_type' => "post_post",//.get_post($dest['id'])->post_type,
+            'element_type' => "post_post", //.get_post($dest['id'])->post_type,
             'trid' => $original_post_language_info->trid,
             'language_code' => $dest['lang'],
             'source_language_code' => $original_post_language_info->language_code
@@ -88,6 +96,3 @@ function link_post_translations($source, $dest)
         do_action('wpml_set_element_language_details', $set_language_args);
     }
 }
-
-
-

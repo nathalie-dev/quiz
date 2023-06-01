@@ -12,8 +12,10 @@
 //define( 'WP_USE_THEMES', false );
 //require_once( ABSPATH . 'wp-admin/admin-ajax.php' );
 
- require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
- 
+ require_once plugin_dir_path(__FILE__) . 'includes/functions.php'; 
+ require_once( plugin_dir_path( __FILE__ ) . 'models_classe/class_quiz.php' );
+
+
 
 // Créer le menu Quiz et les sous-menus
 function nat_quiz_menu()
@@ -122,8 +124,35 @@ function nat_quiz_config()
     include( plugin_dir_path( __FILE__ ) . 'templates/nat_quiz_config.php' );
 }
 
+// Fonction pour afficher un shortcode (c'est une balise interprétée automatiquement par WordPress qui permet d'afficher un contenu spécifique. C'est en quelque sorte un raccourci que WordPress reconnaîtra et affichera.)
+function afficher_theme_quiz_shortcode($atts) {
+    global $wpdb;
+    include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_themes.php' );
+}
+add_shortcode('natquiz_themes', 'afficher_theme_quiz_shortcode');
 
+// Fonction pour récupérer l'ensemble des thèmes et les afficher en public (front-end)
+function recup_theme_front($id_themes,$nom)
+{
+    global $wpdb;
 
+    $table_name = $wpdb->prefix . 'nat_quiz_themes';
+    if ($id_themes > 0) {
+        // si id_theme
+        $themes = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE nom AND id_themes = %d",
+            $nom, $id_themes
+        ));
+    } else {
+
+        // liste des themes
+        $themes = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table_name"
+        ));
+    }
+    return $themes;
+
+}
 
 // Fonction d'installation du plugin
 function nat_quiz_install() {

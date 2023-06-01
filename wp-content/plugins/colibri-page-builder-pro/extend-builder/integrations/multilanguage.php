@@ -2,15 +2,18 @@
 
 namespace ExtendBuilder;
 
-function colibri_polylang_is_active() {
-    return function_exists( 'pll_get_post' );
+function colibri_polylang_is_active()
+{
+    return function_exists('pll_get_post');
 }
 
-function colibri_wpml_is_active() {
-    return class_exists( 'SitePress' );
+function colibri_wpml_is_active()
+{
+    return class_exists('SitePress');
 }
 
-function colibri_multilanguage_is_active() {
+function colibri_multilanguage_is_active()
+{
     return colibri_polylang_is_active() || colibri_wpml_is_active();
 }
 
@@ -30,11 +33,16 @@ function get_current_language()
     if (function_exists('\ExtendBuilder\colibri_get_current_language')) {
         return colibri_get_current_language();
     }
-    return "default";
+    return get_default_language();
 }
 
-function get_post_language($post_id, $default = "default")
+function get_post_language($post_id, $default = null)
 {
+
+    if (is_null($default)) {
+        $default = get_default_language();
+    }
+
     $lang = "";
 
     if (function_exists('\ExtendBuilder\colibri_get_post_language')) {
@@ -56,7 +64,8 @@ function set_post_language($post_id, $lang)
 
 function get_post_in_language($post_id, $lang, $default = true)
 {
-    if ($lang != "default") {
+
+    if (!colibri_is_default_language($lang)) {
         $post_id_lang = null;
         if (colibri_polylang_is_active()) {
             $post_id_lang = pll_get_post($post_id, $lang);
@@ -72,7 +81,7 @@ function get_post_in_language($post_id, $lang, $default = true)
             //icl_object_id( $post_id, get_post($post_id)->post_type, false, $lang );
         }
 
-        if ($post_id_lang !== false && $post_id_lang !== null) {
+        if ($post_id_lang) {
             return $post_id_lang;
         }
     }

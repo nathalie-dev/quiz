@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Contact Form 7 - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-12-29 16:09:28+0000\n"
+"PO-Revision-Date: 2023-05-02 07:40:11+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,14 @@ msgstr ""
 "X-Generator: GlotPress/4.0.0-alpha.4\n"
 "Language: fr\n"
 "Project-Id-Version: Plugins - Contact Form 7 - Stable (latest release)\n"
+
+#: includes/contact-form-functions.php:230
+msgid "Contact form not found."
+msgstr "Formulaire de contact non trouvé !"
+
+#: includes/contact-form-functions.php:229
+msgid "Error:"
+msgstr "Erreur :"
 
 #: includes/block-editor/block.json
 msgctxt "block keyword"
@@ -46,7 +54,7 @@ msgstr "Découvrez comment vos données sont traitées."
 msgid "This form uses Akismet to reduce spam."
 msgstr "Ce formulaire utilise Akismet pour réduire le courrier indésirable."
 
-#: includes/contact-form.php:616
+#: includes/contact-form.php:622
 msgid "Contact form"
 msgstr "Formulaire de contact"
 
@@ -92,7 +100,7 @@ msgstr "Ce champ à une date trop tôt."
 
 #: modules/date.php:162
 msgid "Please enter a date in YYYY-MM-DD format."
-msgstr "SVP, entrez une date au format AAAA-MM-JJ"
+msgstr "Veuillez saisir une date au format AAAA-MM-JJ."
 
 #: includes/rest-api.php:333
 msgid "The request payload format is not supported."
@@ -702,7 +710,7 @@ msgstr "Si vous aimez utiliser Contact Form 7 et que vous le trouvez utile, veui
 msgid "It is hard to continue development and support for this plugin without contributions from users like you."
 msgstr "Il est difficile de continuer le développement et le support de cette extension sans les contributions d’utilisateurs et d’utilisatrices comme vous."
 
-#: includes/contact-form.php:523 includes/contact-form.php:1033
+#: includes/contact-form.php:529 includes/contact-form.php:1039
 msgid "This contact form is available only for logged in users."
 msgstr "Ce formulaire de contact est uniquement disponible pour les comptes enregistrés."
 
@@ -1355,7 +1363,7 @@ msgstr "CAPTCHA"
 
 #: modules/really-simple-captcha.php:239
 msgid "Your entered code is incorrect."
-msgstr "Le code entré est incorrect."
+msgstr "Le code saisi est incorrect."
 
 #: modules/really-simple-captcha.php:237
 msgid "The code that sender entered does not match the CAPTCHA"
@@ -1414,11 +1422,11 @@ msgstr "Générer une balise de formulaire de type case de confirmation. Pour pl
 msgid "acceptance"
 msgstr "confirmation"
 
-#: includes/contact-form.php:224
+#: includes/contact-form.php:230
 msgid "<code>%1$s</code> property of a <code>WPCF7_ContactForm</code> object is <strong>no longer accessible</strong>. Use <code>%2$s</code> method instead."
 msgstr "La propriété <code>%1$s</code> de l’objet <code>WPCF7_ContactForm</code> n’<strong>plus accessible</strong>. Utilisez la méthode <code>%2$s</code> à la place."
 
-#: includes/contact-form.php:112 includes/contact-form.php:431
+#: includes/contact-form.php:112 includes/contact-form.php:437
 msgid "Untitled"
 msgstr "Sans titre"
 

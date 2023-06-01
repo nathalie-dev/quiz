@@ -8,7 +8,7 @@ add_filter('cloudpress\customizer\global_data', function ($data) {
     if (colibri_wpml_is_active()) {
 
         $lang = colibri_get_current_language();
-        if ($lang && $lang != colibri_get_default_language()) {
+        if ($lang && !colibri_is_default_language($lang)) {
             global $sitepress;
             $home = $sitepress->convert_url($sitepress->get_wp_api()->get_home_url(), $lang);
             $data['homeUrl'] = $home;
@@ -25,7 +25,6 @@ add_filter('cloudpress\customizer\global_data', function ($data) {
                 }
             }
         }
-
     }
     return $data;
 });
@@ -210,14 +209,16 @@ add_action('admin_footer', function () {
     global $current_screen;
 
     if (strpos($current_screen->base, 'wpml-string-translation') === 0) {
-        ?>
+?>
         <script>
-            (function ($) {
-                $('option[value="admin_texts_theme_mods_colibri-pro"]').text("<?php _e('colibri Theme Texts',
-                    'mesmerize-pro'); ?>");
+            (function($) {
+                $('option[value="admin_texts_theme_mods_colibri-pro"]').text("<?php _e(
+                                                                                    'colibri Theme Texts',
+                                                                                    'mesmerize-pro'
+                                                                                ); ?>");
             })(jQuery);
         </script>
-        <?php
+    <?php
     }
 });
 
@@ -286,22 +287,23 @@ add_action('wp_footer', function () {
 
 function colibri_wpml_override_copy_content_function()
 {
-    function get_colibri_wpml_source_language() {
+    function get_colibri_wpml_source_language()
+    {
         global $sitepress;
-        $source_lang = filter_var( isset( $_GET['source_lang'] ) ? $_GET['source_lang'] : '', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $source_lang = filter_var(isset($_GET['source_lang']) ? $_GET['source_lang'] : '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $source_lang = 'all' === $source_lang ? colibri_get_current_language() : $source_lang;
 
-        $lang        = filter_var( isset( $_GET['lang'] ) ? $_GET['lang'] : '', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $lang        = filter_var(isset($_GET['lang']) ? $_GET['lang'] : '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $post_translation = $sitepress->post_translations();
         $post = null;
-        if(isset( $_GET['post'] )) {
+        if (isset($_GET['post'])) {
             $post_id = filter_var($_GET['post'], FILTER_SANITIZE_NUMBER_INT);
             $post = get_post($post_id);
         }
-        $source_lang = ! $source_lang && isset( $_GET['post'] ) && $post && $lang !== colibri_get_current_language()
-            ? $post_translation->get_source_lang_code( $post->ID ) : $source_lang;
+        $source_lang = !$source_lang && isset($_GET['post']) && $post && $lang !== colibri_get_current_language()
+            ? $post_translation->get_source_lang_code($post->ID) : $source_lang;
 
-        $_lang_details    = $sitepress->get_language_details( $source_lang );
+        $_lang_details    = $sitepress->get_language_details($source_lang);
         $source_lang_name = $_lang_details['display_name'];
         return $source_lang_name;
     }
@@ -309,22 +311,21 @@ function colibri_wpml_override_copy_content_function()
     {
         $source_lang_name = get_colibri_wpml_source_language();
         ob_start();
-        ?>
+    ?>
         <script>
             function colibri_overwrite_with_english_content() {
                 var input = document.getElementById('icl_set_duplicate');
                 if (input) {
                     input.value =
-                    "<?php echo sprintf(esc_html__( 'Copy content from %s', 'colibri' ),$source_lang_name);?>"
+                        "<?php echo sprintf(esc_html__('Copy content from %s', 'colibri'), $source_lang_name); ?>"
                 }
             }
 
-            wp.domReady(function () {
+            wp.domReady(function() {
                 colibri_overwrite_with_english_content();
             })
-
         </script>
-        <?php
+    <?php
         $script = ob_get_clean();
         $script = str_replace("<script>", "", $script);
         $script = str_replace("</script>", "", $script);
@@ -334,22 +335,21 @@ function colibri_wpml_override_copy_content_function()
     function get_colibri_wpml_copy_content_style()
     {
         ob_start();
-        ?>
+    ?>
         <style>
-
             #icl_cfo {
                 display: none !important;
             }
 
-            #icl_cfo + .otgs-ico-help {
+            #icl_cfo+.otgs-ico-help {
                 display: none !important;
             }
 
-            #icl_set_duplicate ~ .otgs-ico-help {
+            #icl_set_duplicate~.otgs-ico-help {
                 display: none !important;
             }
         </style>
-        <?php
+<?php
         $style = ob_get_clean();
         $style = str_replace("<style>", "", $style);
         $style = str_replace("</style>", "", $style);
@@ -361,9 +361,6 @@ function colibri_wpml_override_copy_content_function()
     wp_add_inline_script('wp-edit-post', $script);
     $style = get_colibri_wpml_copy_content_style();
     wp_add_inline_style('wp-admin', $style);
-
-
 }
 
 add_action('admin_enqueue_scripts', '\ExtendBuilder\colibri_wpml_override_copy_content_function');
-

@@ -3,40 +3,42 @@
 namespace ExtendBuilder;
 
 //polylang
-add_action( 'plugins_loaded', function () {
-    add_filter( 'colibri_page_builder/customizer/preview_data', function ( $value ) {
+add_action('plugins_loaded', function () {
+    add_filter('colibri_page_builder/customizer/preview_data', function ($value) {
         $current_page_has_default_language = true;
-        if ( colibri_polylang_is_active() ) {
+        if (colibri_polylang_is_active()) {
             global $post;
             $is_home = is_home();
-            if ( $is_home ) {
-                $page_id = get_option( 'page_on_front' );
+            if ($is_home) {
+                $page_id = get_option('page_on_front');
             } else {
-                if ( $post ) {
+                if ($post) {
                     $page_id = $post->ID;
                 }
             }
-            $current_page_has_default_language = ! ! pll_get_post( $page_id );
+            $current_page_has_default_language = !!pll_get_post($page_id);
         }
 
         $set_content_to_default_language_link =
-            wp_specialchars_decode( wp_nonce_url( network_admin_url( 'plugins.php' ) .
-                '?page=mlang&pll_action=content-default-lang&noheader=true',
-                'content-default-lang' ) );
+            wp_specialchars_decode(wp_nonce_url(
+                network_admin_url('plugins.php') .
+                    '?page=mlang&pll_action=content-default-lang&noheader=true',
+                'content-default-lang'
+            ));
         $value['polylang']                    = array(
             'set_content_to_default_language_link' => $set_content_to_default_language_link,
             'current_page_has_default_language'    => $current_page_has_default_language
         );
 
         return $value;
-    } );
-} );
+    });
+});
 
 
 add_filter('cloudpress\customizer\global_data', function ($data) {
     if (colibri_polylang_is_active()) {
         $lang = colibri_get_current_language();
-        if ($lang && $lang != colibri_get_default_language()) {
+        if ($lang && !colibri_is_default_language($lang)) {
             global $polylang;
 
             $data['primaryMenuLocation'] = "primary___" . $lang;
@@ -165,41 +167,39 @@ function colibri_multilanguage_copy_from_source()
     }
     $post_data = new PostData($defaultID);
     if (!$post_data->get_data("json")) {
-      return;
+        return;
     }
-    ?>
-  <script>
-    function colibri_multilanguage_copy_from_source() {
-      var data = {
-        action: 'colibri_copy_from_source',
-        source_post: <?php echo wp_json_encode($defaultID); ?>,
-        destination_post: <?php echo wp_json_encode($post->ID); ?>,
-        nonce: '<?php echo wp_create_nonce('ajax-nonce') ?>'
-      };
+?>
+    <script>
+        function colibri_multilanguage_copy_from_source() {
+            var data = {
+                action: 'colibri_copy_from_source',
+                source_post: <?php echo wp_json_encode($defaultID); ?>,
+                destination_post: <?php echo wp_json_encode($post->ID); ?>,
+                nonce: '<?php echo wp_create_nonce('ajax-nonce') ?>'
+            };
 
-      var response = confirm("<?php _e('Current content will be replaced with the content from the primary language. Are you sure ?', 'mesmerize-companion') ?>");
-      if (response) {
-        jQuery.post(ajaxurl, data).done(function (response) {
-          setTimeout(function () {
-            window.location.reload();
-          }, 500);
-        });
-      }
-    }
-  </script>
-   <a href="#" onclick="colibri_multilanguage_copy_from_source()" class="button" style="margin-top: 20px">
-     <span
-      class="dashicons dashicons-admin-page"
-      style="padding-top:4px;"></span><?php _e('Copy from primary language', 'mesmerize-pro') ?></a>
+            var response = confirm("<?php _e('Current content will be replaced with the content from the primary language. Are you sure ?', 'mesmerize-companion') ?>");
+            if (response) {
+                jQuery.post(ajaxurl, data).done(function(response) {
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                });
+            }
+        }
+    </script>
+    <a href="#" onclick="colibri_multilanguage_copy_from_source()" class="button" style="margin-top: 20px">
+        <span class="dashicons dashicons-admin-page" style="padding-top:4px;"></span><?php _e('Copy from primary language', 'mesmerize-pro') ?></a>
     <?php
 }
 
-add_action( 'wp_ajax_colibri_copy_from_source', function ($data) {
+add_action('wp_ajax_colibri_copy_from_source', function ($data) {
 
-    $nonce =sanitize_text_field( $_POST['nonce']);
+    $nonce = sanitize_text_field($_POST['nonce']);
 
-    if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) )
-        die ();
+    if (!wp_verify_nonce($nonce, 'ajax-nonce'))
+        die();
 
     $source_post_id = isset($_REQUEST['source_post']) ? absint($_REQUEST['source_post']) : null;
     $destination_post_id = isset($_REQUEST['destination_post']) ? absint($_REQUEST['destination_post']) : null;
@@ -226,7 +226,7 @@ add_filter('pll_translate_post_meta', function ($value, $key, $lang, $from, $to)
         $new_post = get_post($to);
         $new_post->post_content = $old_post->post_content;
         wp_update_post(wp_slash(array(
-//            'post_status' => 'publish',
+            //            'post_status' => 'publish',
             'post_content' => $old_post->post_content,
             'ID' => $new_post->ID,
         )));
@@ -239,24 +239,23 @@ add_filter('pll_translate_post_meta', function ($value, $key, $lang, $from, $to)
         }
         $content = wp_json_encode($new_post->post_content);
         ob_start();
-        ?>
-      <script>
-        function colibriMultipleLanguageInitialPage() {
-          var content = <?php echo $content; ?>;
-          if (wp.data.dispatch('core/editor') && wp.data.dispatch('core/editor').hasOwnProperty(
-            "resetBlocks")) {
-            wp.data.dispatch('core/editor').resetBlocks(wp.blocks.parse(content));
-          }
-        }
+    ?>
+        <script>
+            function colibriMultipleLanguageInitialPage() {
+                var content = <?php echo $content; ?>;
+                if (wp.data.dispatch('core/editor') && wp.data.dispatch('core/editor').hasOwnProperty(
+                        "resetBlocks")) {
+                    wp.data.dispatch('core/editor').resetBlocks(wp.blocks.parse(content));
+                }
+            }
 
-        wp.domReady(function () {
-          setTimeout(function () {
-            colibriMultipleLanguageInitialPage();
-          }, 1000);
-        });
-
-      </script>
-        <?php
+            wp.domReady(function() {
+                setTimeout(function() {
+                    colibriMultipleLanguageInitialPage();
+                }, 1000);
+            });
+        </script>
+<?php
         $set_guttenberg_content_script = ob_get_clean();
         $set_guttenberg_content_script = str_replace("<script>", "", $set_guttenberg_content_script);
         $set_guttenberg_content_script = str_replace("</script>", "", $set_guttenberg_content_script);
@@ -264,8 +263,3 @@ add_filter('pll_translate_post_meta', function ($value, $key, $lang, $from, $to)
     }
     return $value;
 }, 10, 5);
-
-
-
-
-

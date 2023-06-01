@@ -6,7 +6,7 @@
  *
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
- * Version: 1.0.273-pro
+ * Version: 1.0.274-pro
  * Text Domain: colibri-page-builder-pro
  */
 
@@ -55,7 +55,7 @@ if (!defined("COLIBRI_PAGE_BUILDER_AUTOLOAD")) {
 }
 
 if (!defined("COLIBRI_PAGE_BUILDER_VERSION")) {
-	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.273-pro");
+	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.274-pro");
 }
 
 require_once 'support/wp-5.8.php';
