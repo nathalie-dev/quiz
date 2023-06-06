@@ -5,6 +5,7 @@
 class natquiz {
 
 
+
     // constructeur
     public function __construct()
      {

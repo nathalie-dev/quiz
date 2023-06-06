@@ -13,8 +13,7 @@
 //require_once( ABSPATH . 'wp-admin/admin-ajax.php' );
 
  require_once plugin_dir_path(__FILE__) . 'includes/functions.php'; 
- require_once( plugin_dir_path( __FILE__ ) . 'models_classe/class_quiz.php' );
-
+ require_once plugin_dir_path( __FILE__ ) . 'models_classe/class_quiz.php' ;
 
 
 // Créer le menu Quiz et les sous-menus
@@ -124,6 +123,13 @@ function nat_quiz_config()
     include( plugin_dir_path( __FILE__ ) . 'templates/nat_quiz_config.php' );
 }
 
+// Fonction pour ajouter le css (front-end)
+function css_public_natquiz() {
+    // Ajouter un fichier CSS localisé par plugin_dir_url()
+    wp_enqueue_style( 'main-css', plugin_dir_url( __FILE__ ) . 'natquiz-style.css' ); 
+}
+add_action( 'wp_enqueue_scripts', 'css_public_natquiz' );
+
 // Fonction pour afficher un shortcode (c'est une balise interprétée automatiquement par WordPress qui permet d'afficher un contenu spécifique. C'est en quelque sorte un raccourci que WordPress reconnaîtra et affichera.)
 function afficher_theme_quiz_shortcode($atts) {
     global $wpdb;
@@ -131,28 +137,22 @@ function afficher_theme_quiz_shortcode($atts) {
 }
 add_shortcode('natquiz_themes', 'afficher_theme_quiz_shortcode');
 
-// Fonction pour récupérer l'ensemble des thèmes et les afficher en public (front-end)
-function recup_theme_front($id_themes,$nom)
-{
+//Fonction pour afficher un shortcode pour les questions
+
+function afficher_question_quiz_shortcode($atts) {
     global $wpdb;
-
-    $table_name = $wpdb->prefix . 'nat_quiz_themes';
-    if ($id_themes > 0) {
-        // si id_theme
-        $themes = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM $table_name WHERE nom AND id_themes = %d",
-            $nom, $id_themes
-        ));
-    } else {
-
-        // liste des themes
-        $themes = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $table_name"
-        ));
-    }
-    return $themes;
-
+    include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_questions.php' );
 }
+add_shortcode('natquiz_questions', 'afficher_question_quiz_shortcode');
+
+
+//Fonction pour afficher un shortcode pour les reponses
+function afficher_reponse_quiz_shortcode($atts) {
+    global $wpdb;
+    include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_reponses.php' );
+}
+add_shortcode('natquiz_reponses', 'afficher_reponse_quiz_shortcode');
+
 
 // Fonction d'installation du plugin
 function nat_quiz_install() {
@@ -176,6 +176,7 @@ function nat_quiz_install() {
         }
     }
 }
+
 
 // Fonction de désinstallation du plugin
 function nat_quiz_uninstall() {

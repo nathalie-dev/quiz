@@ -12,15 +12,17 @@ function nat_quiz_save_theme()
     $id_themes = isset($_POST['id_themes']) ? $_POST['id_themes'] : '';
     $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
     $descriptif = isset($_POST['descriptif']) ? $_POST['descriptif'] : '';
+    $image = isset($_POST['image']) ? $_POST['image'] : '';
 
-    if (empty($nom) || empty($descriptif)) {
+    if (empty($nom) || empty($descriptif) || empty($image)) {
         $final['message'] = 'Veuillez remplir tous les champs.';
         $final['error']  = true;
     }
 
     $data = array(
         'nom' => $nom,
-        'descriptif' => $descriptif
+        'descriptif' => $descriptif,
+        'image' => $image
     );
 
     // Ajouter ou mettre à jour un thème
@@ -286,6 +288,11 @@ if ($mode == "add") {
                 <td><label for="descriptif">Descriptif : </label></td>
                 <td><textarea name="descriptif" required="true"></textarea></td>
             </tr>
+            <tr>
+                <td><label for="image">Choisir une photo correspondant au thème:</label></td>
+                <td><input type="file" id="image" img src="/quiz/wp-content/plugins/nat-quiz/image/<?= $theme->image ?>" style="width:180px;height:120px"> 
+                </td>
+            </tr>
         </table>
 
         <p class="submit">
@@ -326,6 +333,7 @@ if ($mode == "add") {
                         <th>ID</th>
                         <th>Nom</th>
                         <th>Descriptif</th>
+                        <th>Image</th>
                         <th>Date de création</th>
                         <th>Active</th>
                         <th>Action</th>
@@ -349,6 +357,9 @@ if ($mode == "add") {
                             </td>
                             <td>
                                 <?php echo $theme->descriptif; ?>
+                            </td>
+                            <td>
+                                <img src="/quiz/wp-content/plugins/nat-quiz/image/<?= $theme->image ?>" alt="négatif de photo" style="width:180px;height:120px">
                             </td>
                             <td>
                                 <?php echo $theme->date_creation; ?>
