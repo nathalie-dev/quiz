@@ -267,8 +267,7 @@ function colibri_blog_posts_normal_item( $atts ) {
 
 				if ( $atts['show_read_more_button'] === 'true' && $atts['single_post'] === 'false' ) : ?>
 					<?php
-					$metadata_read_more_button = '<a class="colibri_post_read_more d-inline-flex" href="' . esc_url( get_permalink() ) . '">' . wp_kses_post($atts['button_text']) . '</a>';
-					echo $metadata_read_more_button;
+					echo '<a class="colibri_post_read_more d-inline-flex" href="' . esc_url( get_permalink() ) . '">' . wp_kses_post($atts['button_text']) . '</a>';
 					?>
 				<?php endif; ?>
 				<?php

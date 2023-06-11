@@ -770,7 +770,7 @@ class PageBuilder
 
 	public function openPageInDefaultEditor()
 	{
-		$post_id = intval($_REQUEST['page']);
+		$post_id = is_numeric($_REQUEST['page']) ? intval($_REQUEST['page']) : null;
 
 		$post = get_post($post_id);
 
@@ -1313,8 +1313,7 @@ class PageBuilder
 
 	public function openPageInCustomizer()
 	{
-		$post_id = intval($_REQUEST['page']);
-		$toMark  = isset($_REQUEST['mark_as_editable']);
+		$post_id = is_numeric($_REQUEST['page']) ? intval($_REQUEST['page']) : null;
 
 		$post = get_post($post_id);
 
@@ -1327,7 +1326,7 @@ class PageBuilder
 
 		$customize_url = add_query_arg('url', urlencode($url), wp_customize_url());
 		?>
-		<?php echo $customize_url; ?>
+		<?php echo esc_url($customize_url); ?>
 <?php
 
 		exit;

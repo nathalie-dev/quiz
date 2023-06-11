@@ -59,7 +59,7 @@ class GoogleFontsLocalLoader {
 		header( 'Content-type: text/css' );
 		header( 'Cache-control: public' );
 
-		$key    = array_get_value( $_REQUEST, 'key', '' );
+		$key    = sanitize_text_field(array_get_value( $_REQUEST, 'key', '' ));
 		$cached = $this->getCachedDataByKey( $key );
 
 		if ( ! $cached ) {

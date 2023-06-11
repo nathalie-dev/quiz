@@ -7,42 +7,128 @@ function nat_quiz_save_theme()
     $final['error']  = false;
     $final['message'] = null;
 
+    
     $table_name = $wpdb->prefix . 'nat_quiz_themes';
 
     $id_themes = isset($_POST['id_themes']) ? $_POST['id_themes'] : '';
     $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
-    $descriptif = isset($_POST['descriptif']) ? $_POST['descriptif'] : '';
-    $image = isset($_POST['image']) ? $_POST['image'] : '';
+    $descriptif = isset ($_POST['descriptif']) ? $_POST['descriptif'] : '';
+    $image = isset($_FILES['image']) ? $_FILES['image'] : '';
+   
+    //
+    // si id_themes non défini mode création 
+    //
 
-    if (empty($nom) || empty($descriptif) || empty($image)) {
-        $final['message'] = 'Veuillez remplir tous les champs.';
-        $final['error']  = true;
+    if (empty($id_themes)) {
+
+        //pour mettre en ligne et copier une photo via un formulaire
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            if ($_FILES['image']['size'] <= 3000000) { //le poids de l'image doit etre inférieur ou égal a 3 mégaoctet
+                $informationsImage = pathinfo($_FILES['image']['name']);
+                $extensionImage = $informationsImage ['extension'];
+                $extensionArray = array ('png','gif','jpg','webp','jpeg');
+                $new_name_image = wpc_sanitize_french_chars(strtolower($nom)).'.'.$extensionImage;
+            }
+        }
+
+        // si les champs sont vide  on affiche un message d'erreur
+        if (empty($nom) || empty($descriptif) || empty($new_name_image)) {
+            $final['message'] = 'Veuillez remplir tous les champs.';
+            $final['error']  = true;
+        }
+
+        // si le format d'image n'est pas correct on affiche un message d'erreur
+        if (!in_array($extensionImage, $extensionArray)) {
+            $final['message'] = 'Format d\'image non pris en charge.';
+            $final['error']  = true;
+        }
+
+        // données qui sont injectées dans la bdd
+        $data = array(
+            'nom' => $nom,
+            'descriptif' => $descriptif,
+            'image' => $new_name_image
+        );
+
+    } else {
+        //
+        // sinon mode edition
+        //
+
+        //pour mettre en ligne et copier une photo via un formulaire
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            if ($_FILES['image']['size'] <= 3000000) { //le poids de l'image doit etre inférieur ou égal a 3 mégaoctet
+                $informationsImage = pathinfo($_FILES['image']['name']);
+                $extensionImage = $informationsImage ['extension'];
+                $extensionArray = array ('png','gif','jpg','webp','jpeg');
+                $new_name_image = wpc_sanitize_french_chars(strtolower($nom)).'.'.$extensionImage;
+            }
+        }
+
+        // si les champs sont vide  on affiche un message d'erreur
+        if (empty($nom) || empty($descriptif)) {
+            $final['message'] = 'Veuillez remplir tous les champs.';
+            $final['error']  = true;
+        }
+
+        // si le format d'image n'est pas correct on affiche un message d'erreur
+        if ( $_FILES['image']['error']==0 && !in_array($extensionImage, $extensionArray)) {
+            $final['message'] = 'Format d\'image non pris en charge.';
+            $final['error']  = true;
+        }
+
+        // données qui sont injectées dans la bdd
+        if(isset($new_name_image)) {
+            $data = array(
+                'nom' => $nom,
+                'descriptif' => $descriptif,
+                'image' => $new_name_image
+            );
+        } else {
+            $data = array(
+                'nom' => $nom,
+                'descriptif' => $descriptif
+            );
+        }
+
+
+
     }
-
-    $data = array(
-        'nom' => $nom,
-        'descriptif' => $descriptif,
-        'image' => $image
-    );
-
     // Ajouter ou mettre à jour un thème
     $table_name = $wpdb->prefix . 'nat_quiz_themes';
-    if (empty($id_themes)) {
+    if (empty($id_themes) && !$final['error']) {
         if ($wpdb->insert($table_name, $data)) {
             $final['message'] = 'Le thème est bien ajouté.';
+            if (in_array($extensionImage, $extensionArray)) {
+                move_uploaded_file($_FILES['image']['tmp_name'], '../wp-content/uploads/natquizfiles/'.basename($new_name_image)); 
+                $final['message'] .= '<br> L\'image a bien été ajoutée.';
+            }
+    /*$_FILES['image']['tmp_name'] Lorsqu'on appuie sur le bouton Envoyer, la photo est copiée sur le serveur distant dans un dossier temporaire nommé tmp 
+    $_FILES['image']['name'] Cette variable contient le nom d'origine du fichier mis en ligne, par exemple fleur.jpg
+    copy($_FILES['image']['tmp_name'], $_FILES['image']['name']); La fonction PHP copy(source, destination) va dupliquer la photo mise en ligne dans le dossier tmp du serveur dans le dossier où se trouve la page. */
+            
         } else {
             $final['message'] = 'Le thème n\'est pas ajouté.';
             $final['error'] = true;
         }
+    
     } else {
-        if ($wpdb->update($table_name, $data, array('id_themes' => $id_themes))) {
-            $final['message'] = 'Le thème a bien été édité.';
-        } else {
-            $final['message'] = 'Le thème n\'est pas édité.';
-            $final['error']  = true;
+        if (is_numeric($id_themes) && !$final['error']) {
+            if ($wpdb->update($table_name, $data, array('id_themes' => $id_themes))) {
+                $final['message'] = 'Le thème a bien été édité.';
+            
+            //pour mettre en ligne et copier une photo via un formulaire
+            if ($_FILES['image']['error']==0 && in_array($extensionImage, $extensionArray)) {
+                move_uploaded_file($_FILES['image']['tmp_name'], '../wp-content/uploads/natquizfiles/'.basename($new_name_image)); 
+                $final['message'] .= '<br> L\'image a bien été éditée.';
+            }
+
+                } else {
+                    $final['message'] = 'Le thème n\'est pas édité.';
+                    $final['error']  = true;
+                }
         }
     }
-
     return $final;
 }
 
@@ -142,6 +228,36 @@ function nat_quiz_get_themes($id_themes = 0)
     return $themes;
 }
 
+ // Fonction pour supprimer une image de thème
+ function delete_theme_image($id) {
+    global $wpdb;
+    $the_theme = nat_quiz_get_themes($id);
+    if($the_theme->id_themes>0) {
+        $file = '../wp-content/uploads/natquizfiles/'.$the_theme->image.''; 
+        if (file_exists($file)) {
+            if(unlink($file)) {
+
+            // update sql case image
+            $data = array(
+                'image' => ''
+            );
+            
+            $table_name = $wpdb->prefix . 'nat_quiz_themes';
+            if ($wpdb->update($table_name, $data, array('id_themes' => $id))) {
+                $final['message'] = 'Le thème a bien été édité.';
+            }
+
+                $final['message'] .= '<br>Suppression du fichier reussi';
+                $final['error']  = false;    
+            }
+        } else {
+                $final['message'] = 'Echec de la suppression du fichier';
+                $final['error']  = true;   
+        }  
+    }
+    return $final;
+}
+
 ?>
 
 <div id="nat-quiz-responses">
@@ -151,6 +267,7 @@ function nat_quiz_get_themes($id_themes = 0)
     $id_theme = null;
     $mode = "list";
     $action = null;
+    
 
     // recuperation de l'id theme dans l'url
     if (isset(($_GET['id_theme']))) {
@@ -177,17 +294,24 @@ function nat_quiz_get_themes($id_themes = 0)
         $action = $_GET['action'];
     }
 
+    // récuperation de la variable delete_image dans l'url
+    if (isset(($_GET['delete_image']))) {
+        $delete_image = $_GET['delete_image'];
+    }
 
-    if (!empty($_POST['nat-quiz-add-edit'])) {
+    if (!empty($_POST['nat-quiz-add-edit'])) { 
         $response = nat_quiz_save_theme();
     }
 
+    // pour supprimer une image
+    if ($mode == 'edit' && isset($id_theme) && $id_theme > 0 && isset($delete_image) && $delete_image != '') {
+        $response = delete_theme_image($id_theme);
+    }
 
     // active / desactive theme
     if ($mode == 'list' && isset($idt) && $idt > 0 && $action != '') {
         $response = nat_quiz_active_theme($idt, $action);
-    }
-
+    }          
 
     // fonction pour supprimer une entrée
     if ($action == 'delete') {
@@ -235,19 +359,31 @@ if ($mode == "edit") {
     echo '<h1>Edition du thème</h1><hr>';
 ?>
 
-    <form action="<?= admin_url() ?>admin.php?page=nat-quiz-themes"  class="wp-admin" method="post">
+    <form action="<?= admin_url() ?>admin.php?page=nat-quiz-themes"  class="wp-admin" method="post" enctype="multipart/form-data">
         <input id="id_themes" type="hidden" name="id_themes" value="<?php echo $themes->id_themes; ?>" />
 
 
         <table>
             <tr>
                 <td><label for="nom">Nom du thème : </label></td>
-                <td><input id="nom" type="text" name="nom" required="true" value="<?=$themes->nom?>" /></td>
-                
+                <td><input id="nom" type="text" name="nom" required="true" value="<?=stripslashes($themes->nom)?>" /></td>    
             </tr>
             <tr>
                 <td><label for="descriptif">Descriptif : </label></td>
-                <td><textarea id="descriptif" name="descriptif" required="true"><?php echo $themes->descriptif; ?></textarea></td>
+                <td><textarea id="descriptif" name="descriptif" required="true"><?php echo stripslashes($themes->descriptif); ?></textarea></td>
+            </tr>
+            <tr>
+                <?php if($themes->image!='') { ?>
+                    <td><label for="image">Image actuelle</label></td>
+                    <td><img src="../wp-content/uploads/natquizfiles/<?=$themes->image?>" style="width:200px;"/>
+                    <br><a href="<?=admin_url()?>admin.php?page=nat-quiz-themes&id_theme=<?= $themes->id_themes?>&mode=edit&delete_image=ok" class="button button-primary">Supprimer l'image</a>
+                <?php } else { ?>
+                    <td colspan="2">Aucune image pour ce thème</div>
+                <?php } ?>
+            </tr>
+            <tr>
+                <td><label for="image">Choisir une photo correspondant au thème:</label></td>
+                <td><input type="file" id="imagetheme" name="image"></td>
             </tr>
         </table>
 
@@ -272,8 +408,8 @@ if ($mode == "add") {
     echo '<h1>Ajouter un thème Quiz</h1><hr>';
 ?>
 
-    <form action="<?= admin_url() ?>admin.php?page=nat-quiz-themes" class="wp-admin" method="post">
-     <!-- <input type="hidden" name="nom" value="<?=$_GET['id_t']?>"> -->
+    <form action="<?= admin_url() ?>admin.php?page=nat-quiz-themes" class="wp-admin" method="post" enctype="multipart/form-data">
+     <!-- L'attribut et la valeur enctype='multipart/form-data' sont ici indispensables car ils permettent au formulaire d'ajouter des données binaires, c'est à dire autre chose que du texte, comme des images, des musiques, ou autres fichiers informatiques -->
         <table>
             <tr>
                 <td><label for="nom">Nom du thème : </label></td>
@@ -290,8 +426,7 @@ if ($mode == "add") {
             </tr>
             <tr>
                 <td><label for="image">Choisir une photo correspondant au thème:</label></td>
-                <td><input type="file" id="image" img src="/quiz/wp-content/plugins/nat-quiz/image/<?= $theme->image ?>" style="width:180px;height:120px"> 
-                </td>
+                <td><input type="file" id="imagetheme" name="image" required="true"></td>
             </tr>
         </table>
 
@@ -324,8 +459,8 @@ if ($mode == "add") {
         <form name="form" method="post" action="">
             <table class="wp-list-table widefat fixed striped">
                 <tr><label><strong>Sélectionner le ou les thèmes à supprimer : </strong></label></tr><br />
+                <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher tout les thèmes</button>
             </table>
-
 
             <table class="wp-list-table widefat fixed striped">
                 <thead>
@@ -351,15 +486,16 @@ if ($mode == "add") {
                                 </div>
                             </td>
                             <td>
-                                <?php echo $theme->nom; ?>
+                                <?php echo stripslashes($theme->nom); ?>
                             </br>
                             <a href ="<?= admin_url() ?>admin.php?page=nat-quiz-questions&mode=add&id_t=<?=$theme->id_themes?>" class="button button-primary">Ajouter une question</a>                            
                             </td>
                             <td>
-                                <?php echo $theme->descriptif; ?>
+                                <?php echo stripslashes($theme->descriptif); ?>
                             </td>
                             <td>
-                                <img src="/quiz/wp-content/plugins/nat-quiz/image/<?= $theme->image ?>" alt="négatif de photo" style="width:180px;height:120px">
+                                <img src=../wp-content/uploads/natquizfiles/<?php echo $theme->image; ?> alt="Photo correspondant au thème" width=100% height=10%> 
+ 
                             </td>
                             <td>
                                 <?php echo $theme->date_creation; ?>
@@ -392,7 +528,9 @@ if ($mode == "add") {
 
     <?php } ?>
 
-   <!-- <pre><?php print_r($_POST) ?></pre> -->
+   <!--<pre><?php print_r($_POST) ?></pre> 
+   <pre><?php print_r($_FILES) ?></pre> -->
+   
 </div>
 
 <script>
@@ -409,7 +547,7 @@ if ($mode == "add") {
                     // alors elle est definit en vrai
                     verif_coche = true;
                 }
-                // si le nbre de cas cochée est egale a 0
+                // si le nbre de case cochée est egale a 0
                 if ($('.verif_ok:checked').length == 0) {
                     // alors elle est definit en faux
                     verif_coche = false;
@@ -424,6 +562,16 @@ if ($mode == "add") {
                 $('button[name="all_delete_id_themes"]').attr('disabled', true);
             }
         });
-    });
+
+//script pou cocher toutes les cases en une seule fois 
+
+    // pour verifier les cases cochées
+    $("#all_coche").click(function() {
+        $(':checkbox').each(function(index) {
+            this.checked = true;
+        });
+    }); 
+
+});
 
 </script>

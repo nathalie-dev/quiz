@@ -299,7 +299,7 @@ if ($mode == "edit") {
             </tr> 
             <tr>
                 <td><label for="question">Question : </label></td>
-                <td><textarea name="question" required="true"><?php echo $questions->question; ?></textarea></td>
+                <td><textarea name="question" required="true"><?php echo stripslashes($questions->question); ?></textarea></td>
             </tr>
     </table>
         <p class="submit">
@@ -376,7 +376,8 @@ if ($mode == "add") {
 
         <form name="form" method="post" action="">
             <table class="wp-list-table widefat fixed striped">
-                <tr><label><strong>Sélectionner la ou les questions à supprimer : </strong></label></tr><br />
+                <tr><label><strong>Sélectionner la ou les questions à supprimer : </strong></label></tr><br/>
+                <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher toutes les questions</button>
             </table>
 
             <table class="wp-list-table widefat fixed striped">
@@ -405,10 +406,7 @@ if ($mode == "add") {
                                 <?php echo $natquiz->get_name_theme($question->theme_associer); ?>
                             </td>
                             <td>
-                                <?php echo  $question->question; ?>
-                            <!-- <?php echo $natquiz->get_name_theme($question->id_questions); ?> -->
-                            <!-- <?php echo $natquiz->get_name_theme($question->theme_associer); ?> -->
-                               
+                                <?php echo  stripslashes($question->question); ?>
                                 </br>
                                 <?php if (nat_quiz_verif_reponse_existe($question->id_questions)) { ?>
                                     <a href="<?= admin_url() ?>admin.php?page=nat-quiz-reponses&id_reponse=<?=nat_quiz_get_num_reponse($question->id_questions)?>&mode=edit" class="button button-primary">Editer des réponses</a>
@@ -446,7 +444,7 @@ if ($mode == "add") {
     ?>
 
     <?php } ?>
-    nat : 
+
 <?php if(isset($_SESSION['nat'])) echo $_SESSION['nat']; ?>
      <!-- <pre><?php print_r($_POST) ?></pre> -->
 </div>
@@ -479,7 +477,15 @@ if ($mode == "add") {
                 $('button[name="all_delete_id_questions"]').attr('disabled', true);
             }
         });
-    });
 
-     
+//script pou cocher toutes les cases en une seule fois 
+
+    // pour verifier les cases cochées
+    $("#all_coche").click(function() {
+        $(':checkbox').each(function(index) {
+            this.checked = true;
+        });
+    }); 
+});
+
 </script>

@@ -152,9 +152,8 @@ function button_pagination( $args, $atts )
     $label = $atts["{$type}_label"];
     $fct_name = "get_{$nav_direction}_posts_link";
     $link = is_customize_preview()
-        ? '<a>' . $label . '</a>'
-        : call_user_func($fct_name,
-            __('<span>' . $label . '</span>', 'colibri-page-builder'));
+        ? '<a>' . esc_html( $label ) . '</a>'
+        : call_user_func($fct_name, '<span>' . esc_html( $label ). '</span>' );
     if ($link) {
         ?>
       <div class="navigation" role="navigation">

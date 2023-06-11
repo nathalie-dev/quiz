@@ -1,6 +1,5 @@
 <?php
 
-
 //class natquiz 
 class natquiz {
 
@@ -101,6 +100,16 @@ class natquiz {
            }
         }
     }
-}
 
-?>
+
+    /* function general */
+   /* réécriture pour mod rewrite 
+   public function RewriteClean($value) {
+    $value = strtr(trim(strtolower($value)), 
+              'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 
+              'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+    $value = preg_replace('/([^.a-z0-9_]+)/i', '-',$value);
+    return $value; 
+}	*/	
+
+}

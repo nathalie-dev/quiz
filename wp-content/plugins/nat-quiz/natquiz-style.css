@@ -3,30 +3,6 @@
  margin: 20px;
 }
 
-#natquiz .allthemes {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-
-#natquiz .theme  { 
-  display: inline-block;
-  align-items: stretch; /*Valeur par défaut. Les éléments sont étirés pour remplir le container flex-box */
-  text-align: center;
-  border: 2px solid palevioletred;
-  border-radius: 5px; 
-  margin: 20px; 
-  padding: 30px;
-  width: 30%;
-  height: 350px;
-}
-/*
-#natquiz .theme  { 
-  float:left;
-}
-*/
-
 #natquiz img {
   width: 300px; /* largeur de la photo*/
   height: 150px;
@@ -37,7 +13,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: auto;
-  border: solid 2px black;
   padding: 30px;
 }
 

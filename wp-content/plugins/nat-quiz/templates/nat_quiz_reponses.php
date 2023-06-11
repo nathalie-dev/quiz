@@ -259,7 +259,7 @@ if ($mode == "edit") {
                 <td>
                     <?php 
                     $natquiz = new natquiz;
-                    echo $natquiz->get_name_theme($reponses->theme_associer);
+                    echo $natquiz->get_name_theme(stripslashes($reponses->theme_associer));
                     ?>
                 </td>
             </tr>
@@ -268,7 +268,7 @@ if ($mode == "edit") {
                 <td><select id="question_associer" name="question_associer">
                     <option value="">-- Choix de la question --</option>
                     <?php 
-                    $allquestions = $natquiz->get_all_questions($reponses->theme_associer);
+                    $allquestions = $natquiz->get_all_questions(stripslashes($reponses->theme_associer));
                     foreach($allquestions as $key => $th) {
                         if($reponses->question_associer==$th->id_questions) {   
                             echo '<option value="'.$th->id_questions.'" selected>'.$th->question.'</option>';
@@ -282,7 +282,7 @@ if ($mode == "edit") {
             </tr>
             <tr>
                 <td><label for="answers">Réponses :</label></td>
-                <td><textarea id="answers" name="answers" required="true"><?php echo $reponses->answers; ?></textarea></td>
+                <td><textarea id="answers" name="answers" required="true"><?php echo stripslashes($reponses->answers); ?></textarea></td>
             </tr>
         </table>
 
@@ -329,7 +329,7 @@ if ($mode == "add") {
                     $natquiz = new natquiz;
                     $questions = $natquiz->get_all_questions($_GET['id_t']);
                     foreach($questions as $key => $th) { 
-                        if($_GET['id_q']==$th->id_questions)  {
+                        if(stripslashes($_GET['id_q'])==$th->id_questions)  {
                             echo '<option value="'.$th->id_questions.'" selected>'.$th->question.'</option>' ;
                         } else {
                             echo '<option value="'.$th->id_questions.'">'.$th->question.'</option>';
@@ -378,7 +378,8 @@ if ($mode == "add") {
 
         <form name="form" method="post" action="">
             <table class="wp-list-table widefat fixed striped">
-                <tr><label><strong>Sélectionner la ou les réponses à supprimer : </strong></label></tr><br />
+                <tr><label><strong>Sélectionner la ou les réponses à supprimer : </strong></label></tr><br/>
+                <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher toutes les réponses</button>
             </table>
 
             <table class="wp-list-table widefat fixed striped">
@@ -410,10 +411,10 @@ if ($mode == "add") {
                             </td>
                             <td>
                                 
-                                <?php echo $natquiz->get_name_question($reponse->theme_associer,$reponse->question_associer); ?>
+                                <?php echo $natquiz->get_name_question(stripslashes($reponse->theme_associer),stripslashes($reponse->question_associer)); ?>
                             </td>
                             <td>
-                                <?php echo $reponse->answers; ?>
+                                <?php echo stripslashes($reponse->answers); ?>
                             </td>
                             <td>
                                 <?php echo $reponse->date_creation; ?>
@@ -482,6 +483,15 @@ if ($mode == "add") {
                 $('button[name="all_delete_id_reponses"]').attr('disabled', true);
             }
         });
+
+//script pou cocher toutes les cases en une seule fois 
+    // pour verifier les cases cochées
+    $("#all_coche").click(function() {
+        $(':checkbox').each(function(index) {
+            this.checked = true;
+        });
+    }); 
+
     });
 
 </script>

@@ -12,13 +12,11 @@ add_shortcode('colibri_video_player', function ($atts) {
 });
 
 function colibri_html_embed_iframe($url,$autoplay){
-    $iframe_html = "<iframe src=".esc_url($url)." class='h-video-main'".(($autoplay === 'true') ? 'allow="autoplay"' : '')."  allowfullscreen></iframe>";
-    echo $iframe_html;
+    echo "<iframe src=".esc_url($url)." class='h-video-main'".(($autoplay === 'true') ? 'allow="autoplay"' : '')."  allowfullscreen></iframe>";
 }
 
 function colibri_html_embed_video($url,$attributes){
-    $video_html = "<video class='h-video-main' ".$attributes." ><source src=".esc_url($url)." type='video/mp4' /></video>";
-    echo $video_html;
+    echo "<video class='h-video-main' ".$attributes." ><source src=".esc_url($url)." type='video/mp4' /></video>";
 }
 
 

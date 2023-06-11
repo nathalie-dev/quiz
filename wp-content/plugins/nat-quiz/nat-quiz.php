@@ -123,6 +123,30 @@ function nat_quiz_config()
     include( plugin_dir_path( __FILE__ ) . 'templates/nat_quiz_config.php' );
 }
 
+// Fonction qui nettoie le nom des fichiers uplodés dans l'admin Worpress en effaçant la plus-part des caractères spéciaux
+function wpc_sanitize_french_chars($filename) {
+	
+	/* Force le nom du fichier en UTF-8 (encodage Windows / OS X / Linux) */
+	$filename = mb_convert_encoding($filename, "UTF-8");
+
+	$char_not_clean = array('/À/','/Á/','/Â/','/Ã/','/Ä/','/Å/','/Ç/','/È/','/É/','/Ê/','/Ë/','/Ì/','/Í/','/Î/','/Ï/','/Ò/','/Ó/','/Ô/','/Õ/','/Ö/','/Ù/','/Ú/','/Û/','/Ü/','/Ý/','/à/','/á/','/â/','/ã/','/ä/','/å/','/ç/','/è/','/é/','/ê/','/ë/','/ì/','/í/','/î/','/ï/','/ð/','/ò/','/ó/','/ô/','/õ/','/ö/','/ù/','/ú/','/û/','/ü/','/ý/','/ÿ/', '/©/','/ /');
+	$clean = array('a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','o','o','o','o','o','u','u','u','u','y','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','o','o','o','o','o','o','u','u','u','u','y','y','copy', '_');
+
+	$friendly_filename = preg_replace($char_not_clean, $clean, $filename);
+
+	/* Après remplacement, nous détruisons les derniers résidus */
+    //$friendly_filename = utf8_decode($friendly_filename); utf8_decode est obsolte à partir de php 8.2.0
+	$friendly_filename = mb_convert_encoding($friendly_filename, 'UTF-8','ISO-8859-1' ); //friendly_filename = nom de fichier amical
+	$friendly_filename = preg_replace('/\?/', '', $friendly_filename); //preg_replace = rechercher et remplacer par
+
+	/* Pour mettre en minuscule*/
+	$friendly_filename = strtolower($friendly_filename);
+
+	return $friendly_filename;
+}
+add_filter('sanitize_file_name', 'wpc_sanitize_french_chars', 10);
+
+
 // Fonction pour ajouter le css (front-end)
 function css_public_natquiz() {
     // Ajouter un fichier CSS localisé par plugin_dir_url()
@@ -198,7 +222,32 @@ function nat_quiz_uninstall() {
             $wpdb->query( $query );
         }
     }
+    @rmdir('../wp-content/uploads/natquizfiles');
 }
+
+
+/*
+* repertoire upload
+*/
+
+// verification si rep existe
+if(!is_dir('../wp-content/uploads/natquizfiles')) {
+    init_dir_natquizfiles();
+}
+// création du repertoire
+function init_dir_natquizfiles() {
+    if (!@mkdir('../wp-content/uploads/natquizfiles', 0700, true)) {
+       // header('Location: '.admin_url().'/admin.php?page=nat-quiz&mode=error&type=dir');
+       // exit();
+    } 
+}
+// suppression du repertoire
+if (!is_dir('../wp-content/uploads/natquizfiles')) {
+    mkdir('../wp-content/uploads/natquizfiles');
+}
+
+
+
 
 // Enregistrement des fonctions d'installation et de désinstallation
 register_activation_hook( __FILE__, 'nat_quiz_install' ); // fonction executée lors de l'installation du plugin
