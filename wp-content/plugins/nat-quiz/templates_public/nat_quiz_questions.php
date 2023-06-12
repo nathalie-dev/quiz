@@ -1,21 +1,238 @@
 <?php
 $natquiz = new natquiz();
 
+$response['error'] = false;
+$response['message'] = null;
+$mode = "reponse";
+
+if(!is_numeric($theme_id)) {
+        $response['error'] = true;  
+        $response['message'] = 'L\'ID du theme n\'existe pas !';  
+}
+
+// gestion des messages de retour
+if ($response['error']) {
+        echo '<div class="error">' . $response['message'] . '</div>';
+} else {
+        if ($response['message'] != '') {
+                echo '<div class="notice notice-success">' . $response['message'] . '</div>';
+        }
+}
+
+if(!$response['error']) {
+?>
+<body>
+
+<div id="natquiz"> 
+        <h1>
+            <span>Quizz</span>
+            mettre le nom du thème ici
+        </h1>
+<div class="global-container">
+       
+        <form action="" class="quiz-form">
+                <div class="question-block">
+                        <h4>question 1</h4> 
+                
+                        <div>
+                                <input type="radio" id="rep1" name="q1" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q1" value="b" />       
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q1" value="c" /> 
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 2</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q2" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q2" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q2" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>     
+
+                <div class="question-block">
+                        <h4>question 3</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q3" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q3" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q3" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 4</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q4" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q4" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q4" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+                
+                <div class="question-block">
+                        <h4>question 5</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q5" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q5" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q5" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>       
+
+                <div class="question-block">
+                        <h4>question 6</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q6" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q6" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q6" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 7</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q7" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q7" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q7" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 8</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q8" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q8" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q8" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 9</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q9" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q9" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q9" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+
+                <div class="question-block">
+                        <h4>question 10</h4> 
+                        <div>
+                                <input type="radio" id="rep1" name="q10" value="a" checked/>
+                                <label for="rep1">rep1</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep2" name="q10" value="b" />
+                                <label for="rep2">rep2</label>
+                        </div>
+                        <div>
+                                <input type="radio" id="rep3" name="q10" value="c" />
+                                <label for="rep3">rep3</label>
+                        </div>
+                </div>
+        <button type="submit">VALIDER ✔️</button>
+        </form>
+
+        <div class="results">
+                <h2>Cliquez sur <span>valider</span> pour voir les <span>résultats.</span></h2>
+                <p class="mark"></p>
+                <p class="help"></p>
+        </div>
+
+</div>
+</div>
+</body>
+
+<?php
+
+
 // recupere les questions
-$questions = $natquiz->get_all_questions();
+$questions = $natquiz->get_all_questions($theme_id);
 //print_r($questions);
 
+ echo 'Question du theme '.$natquiz->get_name_theme($theme_id); 
 foreach ($questions as $question) {
+        if ($question->active == 1) {
 ?>                      
-    <?php echo $natquiz->get_name_theme($question->theme_associer); ?>
-    </br>                       
-    <?php echo  $question->question; ?>
-    </br>
-    <?php if ($question->active == 0) {
-            echo "$question->theme_associer </br>" ; 
-            echo "$question->question </br>"; 
-            } 
-    ?>  
-                            
-    <?php } ?>
-
+                    
+        <?php echo  '<div>'.$question->question.'</div>'; ?>
+        </br>
+        <?php 
+ 
+//recupere les reponses
+$reponses = $natquiz->get_all_reponses($question->id_questions);
+        foreach($reponses as $reponse) {
+                $rep_question = explode("\n",$reponse->answers);
+                $i = 0;
+        foreach($rep_question as $rep) {
+                $i++;
+                echo '<br> --- reponse '.$i.' : '.$rep.'<br>';
+                }
+        }
+            
+    ?>                         
+    <?php }
+        }
+}
+ ?>

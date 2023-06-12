@@ -370,7 +370,7 @@ if ($mode == "edit") {
             </tr>
             <tr>
                 <td><label for="descriptif">Descriptif : </label></td>
-                <td><textarea id="descriptif" name="descriptif" required="true"><?php echo stripslashes($themes->descriptif); ?></textarea></td>
+                <td><textarea id="descriptif" name="descriptif" rows="8" required="true"><?php echo stripslashes($themes->descriptif); ?></textarea></td>
             </tr>
             <tr>
                 <?php if($themes->image!='') { ?>
@@ -422,7 +422,7 @@ if ($mode == "add") {
             </tr>
             <tr>
                 <td><label for="descriptif">Descriptif : </label></td>
-                <td><textarea name="descriptif" required="true"></textarea></td>
+                <td><textarea name="descriptif" rows="5" required="true"></textarea></td>
             </tr>
             <tr>
                 <td><label for="image">Choisir une photo correspondant au thème:</label></td>

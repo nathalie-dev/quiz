@@ -157,7 +157,14 @@ add_action( 'wp_enqueue_scripts', 'css_public_natquiz' );
 // Fonction pour afficher un shortcode (c'est une balise interprétée automatiquement par WordPress qui permet d'afficher un contenu spécifique. C'est en quelque sorte un raccourci que WordPress reconnaîtra et affichera.)
 function afficher_theme_quiz_shortcode($atts) {
     global $wpdb;
-    include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_themes.php' );
+    // Récupérer l'ID du thème à partir de l'URL
+    $theme_id = get_query_var('theme_id');
+    if ($theme_id) {
+        include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_questions.php' );
+    } else {
+        include( plugin_dir_path( __FILE__ ) . 'templates_public/nat_quiz_themes.php' );
+    }
+   
 }
 add_shortcode('natquiz_themes', 'afficher_theme_quiz_shortcode');
 
@@ -177,6 +184,19 @@ function afficher_reponse_quiz_shortcode($atts) {
 }
 add_shortcode('natquiz_reponses', 'afficher_reponse_quiz_shortcode');
 
+// Fonction pour ajouter la variable dynamique 'theme_id' à la structure d'URL
+function liste_all_themes_rewrite_rules() {
+    add_rewrite_rule('^themes/([^/]*)/?', 'index.php?pagename=themes&theme_id=$matches[1]', 'top');
+    flush_rewrite_rules();
+}
+add_action('init', 'liste_all_themes_rewrite_rules');
+
+// Fonction pour ajouter la variable 'theme_id' aux variables de requête
+function liste_all_themes_query_vars($vars) {
+    $vars[] = 'theme_id';
+    return $vars;
+}
+add_filter('query_vars', 'liste_all_themes_query_vars');
 
 // Fonction d'installation du plugin
 function nat_quiz_install() {

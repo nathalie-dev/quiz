@@ -22,11 +22,11 @@ $themes = $natquiz->get_all_themes();
         <div class="contenu">                       
             <?php echo $theme->nom; ?>
             </br>
-            <img src=../wp-content/uploads/natquizfiles/<?php echo $theme->image; ?> alt="Photo correspondant au thème">
+            <a href="<?=admin_url()?>/themes/<?=$theme->id_themes?>/"><img src=../wp-content/uploads/natquizfiles/<?php echo $theme->image; ?> alt="Photo correspondant au thème"></a>
             </br>
             <?php echo $theme->descriptif; ?>
             </br>
-            <a href="//localhost/quiz/questions-quiz/<?=$theme->nom?>">Consulter les questions du thème.</a>
+            <a href="<?=admin_url()?>/themes//themes/<?=$theme->id_themes?>/">Consulter les questions du thème.</a>
         </div>  
     <?php }  ?>           
 </div>

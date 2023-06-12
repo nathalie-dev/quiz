@@ -299,7 +299,7 @@ if ($mode == "edit") {
             </tr> 
             <tr>
                 <td><label for="question">Question : </label></td>
-                <td><textarea name="question" required="true"><?php echo stripslashes($questions->question); ?></textarea></td>
+                <td><textarea name="question" rows="8" required="true"><?php echo stripslashes($questions->question); ?></textarea></td>
             </tr>
     </table>
         <p class="submit">
@@ -342,7 +342,7 @@ if ($mode == "add") {
             </br>
             <tr>
                 <td><label for="question">Question : </label></td>
-                <td><textarea name="question" required="true"></textarea></td>
+                <td><textarea name="question" rows="5" required="true"></textarea></td>
             </tr>
         </table>
         <p class="submit">

@@ -73,7 +73,7 @@ class natquiz {
     }
 
     // Fonction pour récupérer les réponses
-    public function get_all_reponses() {
+   /* public function get_all_reponses() {
         global $wpdb;
 
         $table_name = $wpdb->prefix . 'nat_quiz_reponses';
@@ -82,8 +82,21 @@ class natquiz {
             "SELECT * FROM $table_name"
         ));
         return $reponses;
-    }
+    } */
     
+    public function get_all_reponses($id_questions=null) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'nat_quiz_reponses';
+            // liste des reponses
+            if(is_numeric($id_questions)) {
+                $reponses = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name WHERE `question_associer`=$id_questions"));
+            } else {
+                $reponses = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name"));
+            }
+        return $reponses;
+    }
+
     public function get_name_reponse($id_theme,$id_question,$id_reponse) {
         global $wpdb;
 

@@ -281,8 +281,8 @@ if ($mode == "edit") {
                 </td>
             </tr>
             <tr>
-                <td><label for="answers">Réponses :</label></td>
-                <td><textarea id="answers" name="answers" required="true"><?php echo stripslashes($reponses->answers); ?></textarea></td>
+                <td><label for="answers">Réponses (Une réponse par ligne) :</label></td>
+                <td><textarea id="answers" name="answers" rows="5" required="true"><?php echo stripslashes($reponses->answers); ?></textarea></td>
             </tr>
         </table>
 
@@ -340,8 +340,8 @@ if ($mode == "add") {
                 </td>
             </tr>
             <tr>
-                <td><label for="answers">Réponses :</label></td>
-                <td><textarea name="answers" required="true"></textarea></td>
+                <td><label for="answers">Réponses (Une réponse par ligne):</label></td>
+                <td><textarea name="answers" rows="5" required="true"></textarea></td>
             </tr>
 
         </table>
