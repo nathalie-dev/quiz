@@ -342,7 +342,7 @@ if ($mode == "add") {
             </br>
             <tr>
                 <td><label for="question">Question : </label></td>
-                <td><textarea name="question" rows="5" required="true"></textarea></td>
+                <td><textarea name="question" rows="8" required="true"></textarea></td>
             </tr>
         </table>
         <p class="submit">
@@ -378,6 +378,23 @@ if ($mode == "add") {
             <table class="wp-list-table widefat fixed striped">
                 <tr><label><strong>Sélectionner la ou les questions à supprimer : </strong></label></tr><br/>
                 <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher toutes les questions</button>
+
+                <td><label for="theme_associer">Choisissez un thème :</label></td>
+                <td><select id="filtre_theme" name="select_theme">
+                    <option value="">Afficher tous les thèmes</option>
+                    <?php 
+                    $natquiz = new natquiz;
+                    $allthemes = $natquiz->get_all_themes();
+                    foreach($allthemes as $key => $th) {
+                        if($questions->theme_associer==$th->id_themes) {
+                            echo '<option value="filtre_'.$th->id_themes.'" selected>'.$th->nom.'</option>';
+                        } else {
+                            echo '<option value="filtre_'.$th->id_themes.'">'.$th->nom.'</option>';
+                        }
+                    }
+                    ?>
+                    </select>
+                </td>
             </table>
 
             <table class="wp-list-table widefat fixed striped">
@@ -396,7 +413,7 @@ if ($mode == "add") {
                     $natquiz = new natquiz;
                     foreach ($questions as $question) {
                     ?>
-                        <tr>
+                        <tr class="applyfiltre filtre_<?=$question->theme_associer?>">
                             <td>
                                 <div id="checkbox">
                                     <input type="checkbox" class="verif_ok" name="id_questions_check[]" value="<?php echo $question->id_questions; ?>" id="id_<?php echo $question->id_questions; ?>">
@@ -451,6 +468,21 @@ if ($mode == "add") {
 
 <script>
     jQuery(document).ready(function($) {
+        // pour filtrer par thème
+        $(document).on('change', '#filtre_theme', function() {
+            var filtre_theme = $(this).val();
+            if(filtre_theme == '') {
+                $(".applyfiltre").show(); 
+            } else {
+                $(".applyfiltre").hide();
+                $("."+$(this).val()).show();
+            }
+  //console.log($(this).val());
+
+        });
+
+
+        // pour activer/desactiver le bouton supprimer plusieurs thèmes, questions ou reponses à la fois
         // on définit la variable en faux
         var verif_coche = false;
 

@@ -459,6 +459,7 @@ if ($mode == "add") {
         <form name="form" method="post" action="">
             <table class="wp-list-table widefat fixed striped">
                 <tr><label><strong>Sélectionner le ou les thèmes à supprimer : </strong></label></tr><br />
+
                 <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher tout les thèmes</button>
             </table>
 

@@ -11,21 +11,20 @@ function nat_quiz_save_reponse()
 
     $id_reponses = isset($_POST['id_reponses']) ? $_POST['id_reponses'] : '';
     $theme_associer = isset($_POST['theme_associer']) ? $_POST['theme_associer'] : '';
-    //$question = isset($_POST['question']) ? $_POST['question'] : '';
     $question_associer = isset($_POST['question_associer']) ? $_POST['question_associer'] : '';
-    $answers = isset($_POST['answers']) ? $_POST['answers'] : '';
-    
+    $mauvaise_reponses = isset($_POST['mauvaise_reponses']) ? $_POST['mauvaise_reponses'] : '';
+    $bonne_reponse = isset($_POST['bonne_reponse']) ? $_POST['bonne_reponse'] : '';
 
-    if (empty($theme_associer) || empty($question_associer) ||empty($answers)) {
+    if (empty($theme_associer) || empty($question_associer) ||empty($mauvaise_reponses) || empty($bonne_reponse)) {
         $final['message'] = 'Veuillez remplir tous les champs.';
         $final['error']  = true;
     }
 
     $data = array(
-        //'question' => $question,
         'theme_associer' => $theme_associer,
         'question_associer' => $question_associer,
-        'answers' => $answers
+        'mauvaise_reponses' => $mauvaise_reponses,
+        'bonne_reponse' => $bonne_reponse
     );
 
 
@@ -259,7 +258,7 @@ if ($mode == "edit") {
                 <td>
                     <?php 
                     $natquiz = new natquiz;
-                    echo $natquiz->get_name_theme(stripslashes($reponses->theme_associer));
+                    echo stripslashes($natquiz->get_name_theme($reponses->theme_associer));
                     ?>
                 </td>
             </tr>
@@ -268,12 +267,12 @@ if ($mode == "edit") {
                 <td><select id="question_associer" name="question_associer">
                     <option value="">-- Choix de la question --</option>
                     <?php 
-                    $allquestions = $natquiz->get_all_questions(stripslashes($reponses->theme_associer));
+                    $allquestions = $natquiz->get_all_questions($reponses->theme_associer);
                     foreach($allquestions as $key => $th) {
                         if($reponses->question_associer==$th->id_questions) {   
-                            echo '<option value="'.$th->id_questions.'" selected>'.$th->question.'</option>';
+                            echo '<option value="'.$th->id_questions.'" selected>'.stripslashes($th->question).'</option>';
                         } else {
-                            echo '<option value="'.$th->id_questions.'">'.$th->question.'</option>';
+                            echo '<option value="'.$th->id_questions.'">'.stripslashes($th->question).'</option>';
                         }
                     }
                     ?>
@@ -281,8 +280,12 @@ if ($mode == "edit") {
                 </td>
             </tr>
             <tr>
-                <td><label for="answers">Réponses (Une réponse par ligne) :</label></td>
-                <td><textarea id="answers" name="answers" rows="5" required="true"><?php echo stripslashes($reponses->answers); ?></textarea></td>
+                <td><label for="mauvaise_reponses">Mauvaises réponses (Une réponse par ligne) :</label></td>
+                <td><textarea style="background-color:lightcoral ;width:100%;" id="mauvaise_reponses" name="mauvaise_reponses" rows="2" required="true"><?php echo stripslashes($reponses->mauvaise_reponses); ?></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="bonne_reponse">Bonne réponse :</label></td>
+                <td><input type="text" style="background-color:lightgreen ;width:100%;" id="bonne_reponse" name="bonne_reponse" required="true" value="<?php echo stripslashes($reponses->bonne_reponse); ?>"></td>
             </tr>
         </table>
 
@@ -340,8 +343,12 @@ if ($mode == "add") {
                 </td>
             </tr>
             <tr>
-                <td><label for="answers">Réponses (Une réponse par ligne):</label></td>
-                <td><textarea name="answers" rows="5" required="true"></textarea></td>
+                <td><label for="mauvaise_reponses">Mauvaise réponse (Une réponse par ligne):</label></td>
+                <td><textarea style="background-color:lightcoral;width:100%;" name="mauvaise_reponses" rows="2" required="true"></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="bonne_reponse">Bonne réponse:</label></td>
+                <td><input type="text" style="background-color:lightgreen;width:100%;" name="bonne_reponse" required="true"></td>
             </tr>
 
         </table>
@@ -380,6 +387,23 @@ if ($mode == "add") {
             <table class="wp-list-table widefat fixed striped">
                 <tr><label><strong>Sélectionner la ou les réponses à supprimer : </strong></label></tr><br/>
                 <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher toutes les réponses</button>
+
+                <td><label for="theme_associer">Choisissez un thème :</label></td>
+                <td><select id="filtre_theme" name="select_theme">
+                    <option value=""> Afficher tous les thèmes </option>
+                    <?php 
+                    $natquiz = new natquiz;
+                    $allthemes = $natquiz->get_all_themes();
+                    foreach($allthemes as $key => $th) {
+                        if($questions->theme_associer==$th->id_themes) {
+                            echo '<option value="filtre_'.$th->id_themes.'" selected>'.$th->nom.'</option>';
+                        } else {
+                            echo '<option value="filtre_'.$th->id_themes.'">'.$th->nom.'</option>';
+                        }
+                    }
+                    ?>
+                    </select>
+                </td>
             </table>
 
             <table class="wp-list-table widefat fixed striped">
@@ -388,8 +412,8 @@ if ($mode == "add") {
                         <th>ID</th>
                         <th>Thème</th>
                         <th>Question</th>
-                        <th>Réponses</th>
-                        <th>Date de création</th>
+                        <th>Mauvaises réponses</th>
+                        <th>Bonne réponse</th>
                         <th>Score</th>
                         <th>Active</th>
                         <th>Action</th>
@@ -400,7 +424,7 @@ if ($mode == "add") {
                      $natquiz = new natquiz;
                     foreach ($reponses as $reponse) {
                     ?>
-                        <tr>
+                        <tr class="applyfiltre filtre_<?=$reponse->theme_associer?>">
                             <td>
                                 <div id="checkbox">
                                     <input type="checkbox" class="verif_ok" name="id_reponses_check[]" value="<?php echo $reponse->id_reponses; ?>" id="id_<?php echo $reponse->id_reponses; ?>">
@@ -411,13 +435,20 @@ if ($mode == "add") {
                             </td>
                             <td>
                                 
-                                <?php echo $natquiz->get_name_question(stripslashes($reponse->theme_associer),stripslashes($reponse->question_associer)); ?>
+                                <?php echo stripslashes($natquiz->get_name_question($reponse->theme_associer,$reponse->question_associer)); ?>
                             </td>
                             <td>
-                                <?php echo stripslashes($reponse->answers); ?>
+                                <?php 
+                                $mv_reponses = explode("\n",stripslashes($reponse->mauvaise_reponses)); 
+                                echo '<ul>';
+                                foreach($mv_reponses as $mv_rep) {
+                                    echo '<li>'.$mv_rep.'</li>';
+                                }
+                                echo '</ul>';
+                                ?>
                             </td>
                             <td>
-                                <?php echo $reponse->date_creation; ?>
+                                <?php echo stripslashes($reponse->bonne_reponse); ?>
                             </td>
                             <td>
                                 <?php echo $reponse->score; ?>
@@ -456,6 +487,20 @@ if ($mode == "add") {
 
 <script>
     jQuery(document).ready(function($) {
+
+        $(document).on('change', '#filtre_theme', function() {
+            var filtre_theme = $(this).val();
+            if(filtre_theme == '') {
+                $(".applyfiltre").show(); 
+            } else {
+                $(".applyfiltre").hide();
+                $("."+$(this).val()).show();
+            }
+  //console.log($(this).val());
+
+        });
+
+
         // on définit la variable en faux
         var verif_coche = false;
 
