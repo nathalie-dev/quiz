@@ -564,11 +564,12 @@ if ($mode == "add") {
             }
         });
 
-//script pou cocher toutes les cases en une seule fois 
+//script pour cocher toutes les cases en une seule fois 
 
     // pour verifier les cases cochées
+    
     $("#all_coche").click(function() {
-        $(':checkbox').each(function(index) {
+        $(':checkbox').each(function(index) { 
             this.checked = true;
         });
     }); 

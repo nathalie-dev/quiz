@@ -114,6 +114,18 @@ class natquiz {
         }
     }
 
+    public function verif_good_response($id_question) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'nat_quiz_reponses';
+            if(is_numeric($id_question)) {
+                $reponses = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE `question_associer`=$id_question"));
+            } 
+        if(isset($reponses)) {
+            return $reponses->bonne_reponse;  
+        }
+    } 
+
+   
 
     /* function general */
    /* réécriture pour mod rewrite 
