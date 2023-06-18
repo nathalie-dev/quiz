@@ -72,17 +72,6 @@ class natquiz {
         }
     }
 
-    // Fonction pour récupérer les réponses
-   /* public function get_all_reponses() {
-        global $wpdb;
-
-        $table_name = $wpdb->prefix . 'nat_quiz_reponses';
-            // liste des réponses
-            $reponses = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $table_name"
-        ));
-        return $reponses;
-    } */
     
     public function get_all_reponses($id_questions=null) {
         global $wpdb;
@@ -125,16 +114,81 @@ class natquiz {
         }
     } 
 
+    public function add_score_by_user($user_id,$soumiss_quiz,$soumiss_result,$theme_id,$pcent_reusite) {
+        global $wpdb;
+        $final['error']  = false;
+        $final['message'] = null;
+
+        $table_name = $wpdb->prefix . 'nat_quiz_score';
+
+        $user_id = isset($_POST['user_id']) ? $_POST['user_id']: '';
+        $soumiss_quiz = isset($_POST['soumiss_quiz']) ? $_POST['soumiss_quiz']: '';
+        $soumiss_result = isset($_POST['soumiss_result']) ? $_POST['soumiss_result']: '';
+        $theme_id = isset($_POST['theme_id']) ? $_POST['theme_id']: '';
+        $pcent_reusite = isset($_POST['pcent_reusite']) ? $_POST['pcent_reusite']: '';
+
+        if (empty($user_id) || empty($soumiss_quiz) || empty($soumiss_result) || empty($theme_id) || empty($pcent_reusite)) {
+            $final['error']  = 'Le score de l\'utilisateur ne sont pas enregistré';
+            $final['message'] = true;
+        }
+
+        $data = array('user_id' => $user_id,
+                      'id_theme' => $theme_id,
+                      'questionnaire' => $soumiss_quiz.$soumiss_result,
+                      'score' => $pcent_reusite);
+    }
    
 
-    /* function general */
-   /* réécriture pour mod rewrite 
-   public function RewriteClean($value) {
-    $value = strtr(trim(strtolower($value)), 
-              'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 
-              'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-    $value = preg_replace('/([^.a-z0-9_]+)/i', '-',$value);
-    return $value; 
-}	*/	
+   
+}
 
+/*// Fonction pour ajouter ou éditer une réponse
+function nat_quiz_save_reponse()
+{
+    global $wpdb;
+    $final['error']  = false;
+    $final['message'] = null;
+
+    $table_name = $wpdb->prefix . 'nat_quiz_reponses';
+
+    $id_reponses = isset($_POST['id_reponses']) ? $_POST['id_reponses'] : '';
+    $theme_associer = isset($_POST['theme_associer']) ? $_POST['theme_associer'] : '';
+    $question_associer = isset($_POST['question_associer']) ? $_POST['question_associer'] : '';
+    $mauvaise_reponses = isset($_POST['mauvaise_reponses']) ? $_POST['mauvaise_reponses'] : '';
+    $bonne_reponse = isset($_POST['bonne_reponse']) ? $_POST['bonne_reponse'] : '';
+
+    if (empty($theme_associer) || empty($question_associer) ||empty($mauvaise_reponses) || empty($bonne_reponse)) {
+        $final['message'] = 'Veuillez remplir tous les champs.';
+        $final['error']  = true;
+    }
+
+    $data = array(
+        'theme_associer' => $theme_associer,
+        'question_associer' => $question_associer,
+        'mauvaise_reponses' => $mauvaise_reponses,
+        'bonne_reponse' => $bonne_reponse
+    );
+
+
+    // Ajouter ou mettre à jour la reponse
+    $table_name = $wpdb->prefix . 'nat_quiz_reponses';
+    if(!$final['error']) {
+        if (empty($id_reponses)) {
+            if ($wpdb->insert($table_name, $data)) {
+                $final['message'] = 'Les réponses sont bien ajoutées.';
+            } else {
+                $final['message'] = 'Les réponses ne sont pas ajoutées.';
+                $final['error'] = true;
+            }
+        } else {
+            if ($wpdb->update($table_name, $data, array('id_reponses' => $id_reponses))) {
+                $final['message'] = 'Les réponses ont bien été éditées.';
+            } else {
+                $final['message'] = 'Les réponses n\'ont pas été éditées.';
+                $final['error']  = true;
+            }
+        
+        }
+    }
+    return $final;
 }

@@ -10,6 +10,7 @@ function nat_quiz_save_theme()
     
     $table_name = $wpdb->prefix . 'nat_quiz_themes';
 
+    // isset verifie qu'une variable est définie donc qu'elle existe bien
     $id_themes = isset($_POST['id_themes']) ? $_POST['id_themes'] : '';
     $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
     $descriptif = isset ($_POST['descriptif']) ? $_POST['descriptif'] : '';
@@ -18,7 +19,8 @@ function nat_quiz_save_theme()
     //
     // si id_themes non défini mode création 
     //
-
+ 
+    // empty verifie que la variable n'est pas vide // qu'elle n'est pas null
     if (empty($id_themes)) {
 
         //pour mettre en ligne et copier une photo via un formulaire
@@ -460,7 +462,7 @@ if ($mode == "add") {
             <table class="wp-list-table widefat fixed striped">
                 <tr><label><strong>Sélectionner le ou les thèmes à supprimer : </strong></label></tr><br />
 
-                <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche"  >Cocher tout les thèmes</button>
+                <button type="button" class="button button-secondary select_all_themes" name="all_coche_id_themes" id="all_coche" >Cocher tous les thèmes</button>
             </table>
 
             <table class="wp-list-table widefat fixed striped">

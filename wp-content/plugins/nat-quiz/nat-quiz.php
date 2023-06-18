@@ -44,8 +44,8 @@ function nat_quiz_menu()
     );
     add_submenu_page(
         'nat-quiz',           // Slug de la page parente
-        'Question quiz',      // Titre de la page
-        'Question quiz',      // Titre du menu
+        'Questions quiz',      // Titre de la page
+        'Questions quiz',      // Titre du menu
         'manage_options',      // Capacité requise pour accéder au menu
         'nat-quiz-questions', // Slug de la page
         'nat_quiz_questions'  // Fonction à appeler pour afficher la page
