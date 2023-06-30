@@ -1,11 +1,9 @@
 
 <div id="natquiz">
-<p>Si vous êtes des fans de quiz en tout genre, ce site de quizz gratuit est fait pour vous.</p> 
-<p>Incollable, indétrônable, vos amis redoutent de vous affronter lors des soirées quiz.
-Histoire, actualités, people, télé, cinéma, sports, musique, culture générale, etc... les
-domaines sont variés et les questions nombreuses.</p> 
-<p>Découvrez nos questions et entraînez-vous gratuitement à répondre à tous nos quizz
-gratuits.</p> 
+<p>Êtes-vous prêt à passer un bon moment avec nous ? </p> 
+<p>Alors n’hésitez plus, choisissez un thème qui vous plaît et partez à la découverte de nos questions et surtout n’oubliez pas de valider pour afficher votre score ! </p> 
+<p>Défier vos amis, votre famille, vos collègues et voir qui seront les meilleurs …</p> 
+<p>Que le meilleur gagne ! </p>
 
 <?php
 $natquiz = new natquiz();
@@ -15,12 +13,13 @@ $themes = $natquiz->get_all_themes();
 ?>
 
 <div class="container">
+
     <?php
         foreach ($themes as $theme) 
             if ($theme->active == 1) {
     ?>
         <div class="contenu">                       
-            <?php echo $theme->nom; ?>
+            <span><?php echo $theme->nom; ?></pspan>
             </br>
             <a href="<?=admin_url()?>/themes/<?=$theme->id_themes?>/"><img src=../wp-content/uploads/natquizfiles/<?php echo $theme->image; ?> alt="Photo correspondant au thème"></a>
             </br>

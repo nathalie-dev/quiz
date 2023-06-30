@@ -10,7 +10,7 @@ function nat_quiz_save_theme()
     
     $table_name = $wpdb->prefix . 'nat_quiz_themes';
 
-    // isset verifie qu'une variable est définie donc qu'elle existe bien
+    // isset vérifie qu'une variable est bien déclarée et si elle n'est pas nulle
     $id_themes = isset($_POST['id_themes']) ? $_POST['id_themes'] : '';
     $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
     $descriptif = isset ($_POST['descriptif']) ? $_POST['descriptif'] : '';
@@ -20,7 +20,7 @@ function nat_quiz_save_theme()
     // si id_themes non défini mode création 
     //
  
-    // empty verifie que la variable n'est pas vide // qu'elle n'est pas null
+    // empty verifie que la variable n'est pas vide 
     if (empty($id_themes)) {
 
         //pour mettre en ligne et copier une photo via un formulaire
@@ -54,12 +54,12 @@ function nat_quiz_save_theme()
 
     } else {
         //
-        // sinon mode edition
+        // sinon mode édition
         //
 
         //pour mettre en ligne et copier une photo via un formulaire
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            if ($_FILES['image']['size'] <= 3000000) { //le poids de l'image doit etre inférieur ou égal a 3 mégaoctet
+            if ($_FILES['image']['size'] <= 3000000) { //le poids de l'image doit être inférieur ou égal a 3 mégaoctet
                 $informationsImage = pathinfo($_FILES['image']['name']);
                 $extensionImage = $informationsImage ['extension'];
                 $extensionArray = array ('png','gif','jpg','webp','jpeg');
@@ -184,7 +184,7 @@ function nat_quiz_delete_themes($id)
 
             // effacement multi entrée
             foreach ($id as $delete_themes) {
-                // boucle pour recuperer les ids
+                // boucle pour récupérer les ids
                 foreach ($delete_themes as $key => $content) {
 
                     if ($wpdb->delete($table_name, array('id_themes' => $content))) {
@@ -355,7 +355,7 @@ function nat_quiz_get_themes($id_themes = 0)
     ?>
 </div>
 
-<!-- formulaire pour créer un theme -->
+<!-- formulaire pour modifier un theme -->
 <?php
 if ($mode == "edit") {
     echo '<h1>Edition du thème</h1><hr>';
@@ -579,3 +579,4 @@ if ($mode == "add") {
 });
 
 </script>
+

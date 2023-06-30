@@ -123,7 +123,7 @@ function nat_quiz_config()
     include( plugin_dir_path( __FILE__ ) . 'templates/nat_quiz_config.php' );
 }
 
-// Fonction qui nettoie le nom des fichiers uplodés dans l'admin Worpress en effaçant la plus-part des caractères spéciaux
+// Fonction qui nettoie le nom des fichiers uploadés dans l'admin WorPress en effaçant la plus-part des caractères spéciaux
 function wpc_sanitize_french_chars($filename) {
 	
 	/* Force le nom du fichier en UTF-8 (encodage Windows / OS X / Linux) */

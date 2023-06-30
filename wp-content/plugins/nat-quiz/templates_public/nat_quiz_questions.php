@@ -157,9 +157,9 @@ if(isset($response['quiz'])) {
 /* end debug */
 
 if (!isset($_POST['valid_quiz'])) {
-        print_r($_POST);
+        //print_r($_POST);
 ?>
-
+<a class="" href="<?=admin_url()?>/themes/">Retour à la liste des thèmes</a>
         <h1>
                 <span>Quizz</span></br>
                 <?php echo 'Question du thème ' . $natquiz->get_name_theme($theme_id) . "\n"; ?>

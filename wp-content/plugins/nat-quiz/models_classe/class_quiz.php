@@ -128,7 +128,7 @@ class natquiz {
         $pcent_reusite = isset($_POST['pcent_reusite']) ? $_POST['pcent_reusite']: '';
 
         if (empty($user_id) || empty($soumiss_quiz) || empty($soumiss_result) || empty($theme_id) || empty($pcent_reusite)) {
-            $final['error']  = 'Le score de l\'utilisateur ne sont pas enregistré';
+            $final['error']  = 'Veuillez remplir tous les champs.';
             $final['message'] = true;
         }
 
@@ -136,59 +136,28 @@ class natquiz {
                       'id_theme' => $theme_id,
                       'questionnaire' => $soumiss_quiz.$soumiss_result,
                       'score' => $pcent_reusite);
-    }
+    
    
-
+        // Ajouter les resultat d'un utilisateur
+        $table_name = $wpdb->prefix . 'nat_quiz_score';
+        if(!$final['error']) {
+            if (empty($id_reponses)) {
+                if ($wpdb->insert($table_name, $data)) {
+                    $final['message'] = 'Les résultats utilisateur sont bien ajoutés.';
+                } else {
+                    $final['message'] = 'Les résultats utilisateur ne sont pas ajoutés.';
+                    $final['error'] = true;
+                }
    
-}
-
-/*// Fonction pour ajouter ou éditer une réponse
-function nat_quiz_save_reponse()
-{
-    global $wpdb;
-    $final['error']  = false;
-    $final['message'] = null;
-
-    $table_name = $wpdb->prefix . 'nat_quiz_reponses';
-
-    $id_reponses = isset($_POST['id_reponses']) ? $_POST['id_reponses'] : '';
-    $theme_associer = isset($_POST['theme_associer']) ? $_POST['theme_associer'] : '';
-    $question_associer = isset($_POST['question_associer']) ? $_POST['question_associer'] : '';
-    $mauvaise_reponses = isset($_POST['mauvaise_reponses']) ? $_POST['mauvaise_reponses'] : '';
-    $bonne_reponse = isset($_POST['bonne_reponse']) ? $_POST['bonne_reponse'] : '';
-
-    if (empty($theme_associer) || empty($question_associer) ||empty($mauvaise_reponses) || empty($bonne_reponse)) {
-        $final['message'] = 'Veuillez remplir tous les champs.';
-        $final['error']  = true;
-    }
-
-    $data = array(
-        'theme_associer' => $theme_associer,
-        'question_associer' => $question_associer,
-        'mauvaise_reponses' => $mauvaise_reponses,
-        'bonne_reponse' => $bonne_reponse
-    );
-
-
-    // Ajouter ou mettre à jour la reponse
-    $table_name = $wpdb->prefix . 'nat_quiz_reponses';
-    if(!$final['error']) {
-        if (empty($id_reponses)) {
-            if ($wpdb->insert($table_name, $data)) {
-                $final['message'] = 'Les réponses sont bien ajoutées.';
             } else {
-                $final['message'] = 'Les réponses ne sont pas ajoutées.';
-                $final['error'] = true;
+                if ($wpdb->update($table_name, $data, array('id_reponses' => $id_reponses))) {
+                    $final['message'] = 'Les résultats utilisateur sont bien ajoutés..';
+                } else {
+                    $final['message'] = 'Les résultats utilisateur ne sont pas ajoutés.';
+                    $final['error']  = true;
+                }
             }
-        } else {
-            if ($wpdb->update($table_name, $data, array('id_reponses' => $id_reponses))) {
-                $final['message'] = 'Les réponses ont bien été éditées.';
-            } else {
-                $final['message'] = 'Les réponses n\'ont pas été éditées.';
-                $final['error']  = true;
-            }
-        
+            return $final;
         }
     }
-    return $final;
 }
